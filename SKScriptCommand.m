@@ -1,10 +1,10 @@
 //
-//  SKPreferencePane.h
+//  SKScriptCommand.m
 //  Skim
 //
-//  Created by Christiaan Hofman on 3/20/10.
+//  Created by Christiaan Hofman on 11/26/10.
 /*
- This software is Copyright (c) 2010
+ This software is Copyright (c) 2008-2010
  Christiaan Hofman. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -36,17 +36,39 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
-#import "SKViewController.h"
+#import "SKScriptCommand.h"
 
 
-@interface SKPreferencePane : SKViewController
+@implementation SKScriptCommand
 
-@property (nonatomic, readonly) NSImage *icon;
+// Workaround for Cocoa Scripting and AppleScript bugs.
+// Cocoa Scripting does not accept range specifiers whose start/end specifier have an absolute container specifier, but AppleScript does not accept range specifiers with relative container specifiers, so we cannot return those from PDFSselection
+static void fixRangeSpecifier(NSScriptObjectSpecifier *specifier) {
+    if ([specifier isKindOfClass:[NSRangeSpecifier class]]) {
+        NSScriptObjectSpecifier *childSpec = [(NSRangeSpecifier *)specifier startSpecifier];
+        if ([childSpec containerSpecifier]) {
+            [childSpec setContainerSpecifier:nil];
+            [childSpec setContainerIsRangeContainerObject:YES];
+        }
+        childSpec = [(NSRangeSpecifier *)specifier endSpecifier];
+        if ([childSpec containerSpecifier]) {
+            [childSpec setContainerSpecifier:nil];
+            [childSpec setContainerIsRangeContainerObject:YES];
+        }
+    }
+}
 
-- (void)defaultsDidRevert;
+- (NSScriptObjectSpecifier *)receiversSpecifier {
+    NSScriptObjectSpecifier *specifier = [super receiversSpecifier];
+    fixRangeSpecifier(specifier);
+    return specifier;
+}
 
-- (IBAction)changeFont:(id)sender;
-- (IBAction)changeAttributes:(id)sender;
+- (NSDictionary *)arguments {
+    NSDictionary *arguments = [super arguments];
+    for (NSString *key in arguments)
+        fixRangeSpecifier([arguments objectForKey:key]);
+    return arguments;
+}
 
 @end

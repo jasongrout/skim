@@ -2,7 +2,7 @@
 //  SKLocalization.m
 //  Skim
 //
-//  Created by Christiaan on 3/13/10.
+//  Created by Christiaan Hofman on 3/13/10.
 /*
  This software is Copyright (c) 2010
  Christiaan Hofman. All rights reserved.
@@ -158,7 +158,7 @@ do { \
     NSArray *cells = [self cells];
     NSString *toolTip;
     [cells localizeStringsFromTable:table];
-    for (id cell in [self cells]) {
+    for (id cell in cells) {
         if (toolTip = localizedStringFromTable([self toolTipForCell:cell], table))
             [self setToolTip:toolTip forCell:cell];
     }

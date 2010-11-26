@@ -1,10 +1,10 @@
 //
-//  SKPreferencePane.h
+//  SKScriptCommand.h
 //  Skim
 //
-//  Created by Christiaan Hofman on 3/20/10.
+//  Created by Christiaan Hofman on 11/26/10.
 /*
- This software is Copyright (c) 2010
+ This software is Copyright (c) 2008-2010
  Christiaan Hofman. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -37,16 +37,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SKViewController.h"
 
 
-@interface SKPreferencePane : SKViewController
-
-@property (nonatomic, readonly) NSImage *icon;
-
-- (void)defaultsDidRevert;
-
-- (IBAction)changeFont:(id)sender;
-- (IBAction)changeAttributes:(id)sender;
-
+@interface SKScriptCommand : NSScriptCommand
 @end

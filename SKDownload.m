@@ -166,7 +166,17 @@ static NSSet *infoKeys = nil;
 }
 
 - (NSString *)fileName {
-    return [([self filePath] ?: [[self URL] path]) lastPathComponent];
+    NSString *fileName = [filePath lastPathComponent];
+    if (fileName == nil) {
+        if ([[URL path] length] > 1) {
+            fileName = [[URL path] lastPathComponent];
+        } else {
+            fileName = [URL host];
+            if (fileName == nil)
+                fileName = [[[URL resourceSpecifier] lastPathComponent] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+    }
+    return fileName;
 }
 
 - (NSImage *)fileIcon {

@@ -3370,6 +3370,8 @@ enum {
     bezierPaths = nil;
     [pathColor release];
     pathColor = nil;
+    [self setActiveAnnotation:nil];
+
 }
 
 - (void)doDragWithEvent:(NSEvent *)theEvent {

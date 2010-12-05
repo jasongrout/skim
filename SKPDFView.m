@@ -3201,7 +3201,12 @@ enum {
         }
     }
     
-    if (newActiveAnnotation) {
+	if (toolMode == SKNoteToolMode && annotationMode == SKInkNote && hideNotes == NO && page != nil) {
+        [self doDrawFreehandNoteWithEvent:theEvent];
+        
+        return YES;
+        
+    } else if (newActiveAnnotation) {
         
         if (activeAnnotation != newActiveAnnotation)
             [self setActiveAnnotation:newActiveAnnotation];
@@ -3289,12 +3294,6 @@ enum {
                 dragMask = 0;
             }
         }
-        
-        return YES;
-        
-    } else if (toolMode == SKNoteToolMode && annotationMode == SKInkNote && hideNotes == NO && page != nil) {
-        
-        [self doDrawFreehandNoteWithEvent:theEvent];
         
         return YES;
         
@@ -3407,6 +3406,9 @@ enum {
     
     PDFPage *page = [self pageForPoint:mouseLoc nearest:NO];
     CGFloat margin = 4.0 / [self scaleFactor];
+    // TODO: This margin is a constant; take it out if we are in
+    // freehand draw mode so that we can't accidentally select
+    // something (we must switch to another mode to select something)? 
     
     if (page == nil) {
         selectionRect = NSZeroRect;
